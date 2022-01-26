@@ -14,6 +14,14 @@ export const loadJIRAAuth = () => ({
   jira_token: process.env.JIRA_TOKEN,
 });
 
+export const loadSlackAuth = () => ({
+  slack_token: process.env.SLACK_TOKEN,
+});
+
+export const loadSlackConfig = () => ({
+  conversation_id: process.env.SLACK_CONVERSATION_ID,
+});
+
 export const loadJIRAConfig = () => ({
   board_id: process.env.JIRA_BOARD_ID,
 });

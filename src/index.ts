@@ -9,8 +9,9 @@ import {
   withPullRequestCount,
   withUndeployedCommitCount,
 } from "./service/github";
+import { toSlack } from "./service/slack";
 
-const report: System[] = await Promise.all(
+const systemData: System[] = await Promise.all(
   systems.map(async (system) => {
     return pipe(
       withJusticeServiceVersion,
@@ -23,7 +24,7 @@ const report: System[] = await Promise.all(
   })
 );
 
-console.table(report, [
+console.table(systemData, [
   "name",
   "last_deployed",
   "branch_count",
@@ -32,3 +33,5 @@ console.table(report, [
   "undeployed_commits",
   "open_issues",
 ]);
+
+toSlack(systemData);
