@@ -2,7 +2,7 @@ import { pipe } from "rxjs";
 
 import { System, systems } from "./systems";
 import { withJusticeServiceVersion } from "./service/moj";
-import { withDeployAge } from "./service/circleci";
+import { withDeployAge, withSecurity } from "./service/circleci";
 import { withIssues } from "./service/jira";
 import {
   withBranchCount,
@@ -19,7 +19,8 @@ const systemData: System[] = await Promise.all(
       withBranchCount,
       withUndeployedCommitCount,
       withPullRequestCount,
-      withIssues
+      withIssues,
+      withSecurity
     )(Promise.resolve(system));
   })
 );
@@ -32,6 +33,7 @@ console.table(systemData, [
   "pull_requests",
   "undeployed_commits",
   "open_issues",
+  "failing_security_for",
 ]);
 
 toSlack(systemData);
