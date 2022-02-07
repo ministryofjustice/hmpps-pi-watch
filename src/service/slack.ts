@@ -34,6 +34,7 @@ const message = (
   const prs = `*Open PRs:*                     ${system.pull_requests}`;
   const commits = `*Undeployed Commits:* ${system.undeployed_commits}`;
   const issues = `*Open Issues:*                 ${system.open_issues}`;
+  const security = `*Failing Security For:*     ${system.failing_security_for}`;
 
   const header: HeaderBlock = {
     type: "header",
@@ -48,7 +49,7 @@ const message = (
     type: "section",
     text: {
       type: "mrkdwn",
-      text: `> ${version}\n> ${deployed}\n> ${branches}\n> ${prs}\n> ${commits}\n> ${issues}`,
+      text: `> ${version}\n> ${deployed}\n> ${branches}\n> ${prs}\n> ${commits}\n> ${issues}\n> ${security}`,
     },
   };
 
