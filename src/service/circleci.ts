@@ -62,7 +62,7 @@ export const withSecurity = async (
     return res.status == "success";
   });
 
-  const latestFailures = sortedResponses.slice(0, firstSuccess - 1);
+  const latestFailures = sortedResponses.slice(0, firstSuccess);
 
   const age = formatDistanceToNowStrict(
     new Date(latestFailures?.at(-1)?.stopped_at ?? Date.now())
