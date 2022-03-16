@@ -1,0 +1,78 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: "{{ include "app.fullname" . }}-publish"
+  labels:
+    {{- include "app.labels" . | nindent 4 }}
+spec:
+  schedule: "30 7 * * 1" # At 07:30 every Monday.
+  concurrencyPolicy: Forbid
+  failedJobsHistoryLimit: 5
+  startingDeadlineSeconds: 600
+  successfulJobsHistoryLimit: 5
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: Never
+          containers:
+            - name: publish-pi-watch
+              image: node:17
+              workingDir: /tmp
+              securityContext:
+                runAsUser: 1000
+              env:
+                - name: GITHUB_TOKEN
+                  valueFrom:
+                    secretKeyRef:
+                      name: pi-watch
+                      key: github-token
+                - name: CIRCLECI_TOKEN
+                  valueFrom:
+                    secretKeyRef:
+                      name: pi-watch
+                      key: circleci-token
+                - name: JIRA_TOKEN
+                  valueFrom:
+                    secretKeyRef:
+                      name: pi-watch
+                      key: jira-token
+                - name: JIRA_BOARD_ID
+                  valueFrom:
+                    secretKeyRef:
+                      name: pi-watch
+                      key: jira-board-id
+                - name: SLACK_TOKEN
+                  valueFrom:
+                    secretKeyRef:
+                      name: pi-watch
+                      key: slack-token
+                - name: SLACK_CONVERSATION_ID
+                  valueFrom:
+                    secretKeyRef:
+                      name: pi-watch
+                      key: slack-conversation-id
+              args:
+                - /bin/sh
+                - -c
+                - |
+                  # Create .env file in the project root
+                  git clone https://${GITHUB_TOKEN}@github.com/ministryofjustice/hmpps-pi-watch.git
+                  cd hmpps-pi-watch
+                  git switch PI-88-publish-cronjob
+
+                  cat << EOF > .env
+                  GITHUB_TOKEN=${GITHUB_TOKEN}
+                  CIRCLECI_TOKEN=${CIRCLECI_TOKEN}
+                  JIRA_TOKEN=${JIRA_TOKEN}
+                  JIRA_BOARD_ID=${JIRA_BOARD_ID}
+                  SLACK_TOKEN=${SLACK_TOKEN}
+                  SLACK_CONVERSATION_ID=${SLACK_CONVERSATION_ID}
+
+                  EOF
+
+                  # Install
+                  npm ci
+
+                  # Build and run
+                  npm run exec

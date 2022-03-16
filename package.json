@@ -19,6 +19,7 @@
   },
   "scripts": {
     "check": "tsc -p . --noEmit --watch",
+    "compile": "tsc -p . --noEmit",
     "exec": "tsc && node --es-module-specifier-resolution=node ./dist/index.js"
   }
 }

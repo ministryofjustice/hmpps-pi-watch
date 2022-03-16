@@ -18,13 +18,13 @@ export const systems: System[] = [
     name: "hmpps-delius-api",
     deploy_job: "deploy-to-prod",
     security_job: "scheduled",
-    prod_url: "https://delius-api.probation.service.justice.gov.uk/info",
+    prod_url: "https://delius-api-public.probation.service.justice.gov.uk/info",
   },
   {
     name: "community-api",
     deploy_job: "deploy_to_production",
     security_job: "security",
-    prod_url: "https://community-api.probation.service.justice.gov.uk/info",
+    prod_url: "https://community-api-public.probation.service.justice.gov.uk/info",
   },
   {
     name: "probation-offender-events",
