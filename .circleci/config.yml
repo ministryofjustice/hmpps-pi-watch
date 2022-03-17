@@ -1,0 +1,30 @@
+version: 2.1
+
+orbs:
+  hmpps: ministryofjustice/hmpps@3.14
+  node: circleci/node@5.0.0
+
+jobs:
+  create_app_version:
+    executor: hmpps/default
+    steps:
+      - hmpps/create_app_version
+
+workflows:
+  version: 2
+  check:
+    jobs:
+      - node/run:
+          npm-run: compile
+      - hmpps/helm_lint:
+          name: helm_lint
+      - create_app_version:
+          filters:
+            branches:
+              only:
+                - main
+      - hmpps/deploy_env:
+          jira_update: true
+          context: hmpps-common-vars
+          requires:
+            - create_app_version
