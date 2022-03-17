@@ -1,15 +1,11 @@
-import {
-  WebClient,
-  HeaderBlock,
-  DividerBlock,
-  SectionBlock,
-} from "@slack/web-api";
-import { loadSlackAuth, loadSlackConfig } from "../config";
+import { HeaderBlock, DividerBlock, SectionBlock } from "@slack/web-api";
+import { IncomingWebhook } from "@slack/webhook";
+
+import { loadSlackConfig } from "../config";
 import { System } from "../systems";
 
-const auth = loadSlackAuth();
 const config = loadSlackConfig();
-const web = new WebClient(auth.slack_token);
+const webhook = new IncomingWebhook(config.slack_webhook || "");
 
 export const toSlack = (systems: System[]) => {
   const report = systems
@@ -18,10 +14,9 @@ export const toSlack = (systems: System[]) => {
     })
     .flat();
 
-  return web.chat.postMessage({
+  return webhook.send({
     text: report.toString(),
-    blocks: report,
-    channel: config.conversation_id as string,
+    blocks: report
   });
 };
 
