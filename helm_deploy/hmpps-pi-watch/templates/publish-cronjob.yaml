@@ -59,7 +59,6 @@ spec:
                   # Create .env file in the project root
                   git clone https://${GITHUB_TOKEN}@github.com/ministryofjustice/hmpps-pi-watch.git
                   cd hmpps-pi-watch
-                  git switch PI-88-publish-cronjob
 
                   cat << EOF > .env
                   GITHUB_TOKEN=${GITHUB_TOKEN}
